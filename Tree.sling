@@ -56,5 +56,5 @@ func getCenterY as double
 
 func cleanup override
 {
-
+	gameScene.removeAllSprites()
 }

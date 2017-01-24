@@ -13,18 +13,24 @@ var fireBullet as Fire
 var bird as Bird
 var audioManager as AudioManager
 var stream as AudioStream
+var score as int
+var textScore as TextSprite
 
 func initialize override
 {
-
 	base.initialize()
 	audioManager = AudioManager.forApplication(context)
 	if(audioManager != null){
 		stream = audioManager.getStreamForResource("background")
 	}
+	score = 0
 	playBackgroundMusic()
 	jumpIsClicked = false
 	addEntity(gameBackground = new GameBackground())
+	var txtProp = TextProperties.forText("Score")
+	txtProp.setFontSizeRelative(20.0)
+	textScore = addTextSprite(txtProp)
+	textScore.move(0.0 , 0.0)
 	var fireButtonTexture = createTextureForImageResource("fire_button")
   fireButton = addTextureSpriteForSize(fireButtonTexture, getReferenceWidth() * 0.1, getReferenceHeight() * 0.1)
 	var jumpButtonTexture = createTextureForImageResource("up_button")
@@ -38,6 +44,7 @@ func initialize override
 func tick(gameTime as TimeValue, delta as double) override
 {
 	base.tick(gameTime, delta)
+	textScore.setText(String.append("Score: ", score))
 	time += 1
 	if(time % 200 == 0){
 		addEntity(tree = new Tree())
@@ -117,8 +124,18 @@ func switchToGameOverScene
 	pushScene(new GameOverScene())
 }
 
+func getScore as int
+{
+	return score
+}
+
+func addScore
+{
+	score += 1
+}
 
 func cleanup override
 {
-
+	removeAllSprites()
+	removeAllEntities()
 }

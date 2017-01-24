@@ -47,6 +47,7 @@ func tick(gameTime as TimeValue, delta as double) override
 //		gameScene.removeSprite(gameScene.getBird().getSprite())
 //	}
 	if(collide()){
+			gameScene.addScore()
 			gameScene.removeSprite(sprite)
 			gameScene.removeEntity(gameScene.getBird())
 	}
@@ -63,7 +64,7 @@ func collide as bool
 
 func cleanup override
 {
-
+	gameScene.removeAllSprites()
 }
 
 func getSprite as Sprite
