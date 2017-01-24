@@ -1,0 +1,32 @@
+class is SpriteEntity imports motion imports cape #gameBackGround:
+
+var bgSprite as Sprite
+var width as double
+
+func createSprite override as Sprite
+{
+	var txt = scene.createTextureForImageResource("background")
+	width = layer.getReferenceWidth()
+	var bg = SpriteUtil.addTextureSpriteForSize(scene, layer, txt, width, layer.getReferenceHeight())
+	bgSprite = SpriteUtil.addTextureSpriteForSize(scene, layer, txt, width, layer.getReferenceHeight())
+	bg.move(0.0, 0.0)
+	bgSprite.move(width, 0.0)
+	return(bg)
+}
+
+func tick(gameTime as TimeValue, delta as double) override
+{
+	base.tick(gameTime, delta)
+	var x = sprite.getX() - delta * 0.1
+	if(x <= -width){
+		x = 0
+	}
+	sprite.move(x , 0.0)
+	bgSprite.move(x + width ,0.0)
+}
+
+func cleanup override
+{
+	layer.removeSprite(bgSprite)
+	layer.removeSprite(sprite)
+}

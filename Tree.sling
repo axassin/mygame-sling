@@ -2,22 +2,25 @@ class is SpriteEntity imports cape imports cave imports motion #tree:
 
 
 var tree as TextureSprite
-
-
+var treeX as double
 
 func createSprite override as Sprite
 {
+	var random = new Random()
 	var sceneWidth = layer.getReferenceWidth()
 	var sceneHeight = layer.getReferenceHeight()
 	var img = scene.createImageFromResource("tree")
 	var texture = scene.createTextureForImage(img)
 	tree = SpriteUtil.addTextureSpriteForSize(scene, layer, texture, sceneHeight * 0.1, sceneHeight * 0.1)
+	tree.move( sceneWidth , layer.getReferenceHeight() * 0.78 - tree.getHeight())
 	return tree
 }
 
-//func tick(gameTime as TimeValue, delta as double) override
-//{
-//}
+func tick(gameTime as TimeValue, delta as double) override
+{
+	var x = tree.getX() - delta * 0.3
+	tree.move(x , layer.getReferenceHeight() * 0.78 - tree.getHeight())
+}
 
 func cleanup override
 {
