@@ -39,23 +39,26 @@ func getCenterY as double
 func tick(gameTime as TimeValue, delta as double) override
 {
 	base.tick(gameTime, delta)
+
 	birdY -= (sprite.getY() - (gameScene.getPlayer().getY() - 0.005 * sprite.getHeight())) * 0.01
 	birdX -= (sprite.getX() - (gameScene.getPlayer().getX() - 0.005 * sprite.getWidth())) * 0.01
+		sprite.move(birdX , birdY)
+
 //if(gameScene.collide(sprite, gameScene.getPlayer().getSprite())){
 //	gameScene.switchToGameOverScene()
 // }
 	if(collide()){
 		gameScene.switchToGameOverScene()
 	}
-	sprite.move(birdX , birdY)
+
 }
 
 func collide as bool
 {
-	var distanceX = Math.abs(getCenterX() - gameScene.getPlayer().getCenterX())
-	var distanceY = Math.abs(getCenterY()- gameScene.getPlayer().getCenterY())
-	var distanceCollideX = sprite.getWidth() * 0.3 + gameScene.getPlayer().getWidth() * 0.3
-	var distanceCollideY = sprite.getHeight() * 0.3 + gameScene.getPlayer().getHeight() * 0.3
+	distanceX = Math.abs(getCenterX() - gameScene.getPlayer().getCenterX())
+	distanceY = Math.abs(getCenterY()- gameScene.getPlayer().getCenterY())
+	distanceCollideX = sprite.getWidth() * 0.3 + gameScene.getPlayer().getWidth() * 0.3
+	distanceCollideY = sprite.getHeight() * 0.3 + gameScene.getPlayer().getHeight() * 0.3
 	return(distanceX < distanceCollideX && distanceY < distanceCollideY)
 }
 

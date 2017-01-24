@@ -46,7 +46,7 @@ func tick(gameTime as TimeValue, delta as double) override
 //		gameScene.removeSprite(sprite)
 //		gameScene.removeSprite(gameScene.getBird().getSprite())
 //	}
-	if(collide){
+	if(collide()){
 			gameScene.removeSprite(sprite)
 			gameScene.removeSprite(gameScene.getBird().getSprite())
 	}
