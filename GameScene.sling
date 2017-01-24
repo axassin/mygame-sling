@@ -5,12 +5,24 @@ var tree as Tree
 var time as int
 var gameBackground as GameBackground
 var gameTimer as long
+var fireButton as TextureSprite
+var jumpButton as TextureSprite
+var jumpIsClicked as boolean
+var castFire as boolean
+var fireBullet as Fire
 
 func initialize override
 {
 
 	base.initialize()
+	jumpIsClicked = false
 	addEntity(gameBackground = new GameBackground())
+	var fireButtonTexture = createTextureForImageResource("fire_button")
+  fireButton = addTextureSpriteForSize(fireButtonTexture, getReferenceWidth() * 0.1, getReferenceHeight() * 0.1)
+	var jumpButtonTexture = createTextureForImageResource("up_button")
+  jumpButton = addTextureSpriteForSize(jumpButtonTexture, getReferenceWidth() * 0.1, getReferenceHeight() * 0.1)
+	fireButton.move(0 , getReferenceHeight() - fireButton.getHeight())
+	jumpButton.move(getReferenceWidth() - jumpButton.getWidth() , getReferenceHeight() - jumpButton.getHeight())
 	addEntity(player = new Player())
 }
 
@@ -21,12 +33,59 @@ func tick(gameTime as TimeValue, delta as double) override
 	if(time % 200 == 0){
 		addEntity(tree = new Tree())
 	}
+	if(castFire){
+		addEntity(fireBullet = new Fire())
+	}
+
 	PRINT(String.append("TIME: " , gameTime.getMicroSeconds() / 1000000))
+}
+
+func onPointerEvent(event as PointerEvent) override
+{
+	base.onPointerEvent(event)
+	if(event.isConsumed){
+		return
+	}
+	if(event.action == PointerEvent.DOWN){
+		if(event.isInside(fireButton.getX(),fireButton.getY(),fireButton.getWidth(),fireButton.getHeight())){
+			castFire = true
+		}
+
+		if(event.action == PointerEvent.DOWN){
+			if(event.isInside(jumpButton.getX(),jumpButton.getY(),jumpButton.getWidth(),jumpButton.getHeight())){
+				if(player.getOneTap()){
+					player.getY() -= 0.001
+					player.setPlayerJump(true)
+				}
+			}
+		}
+
+	}
+	else if(event.action == PointerEvent.UP){
+		if(event.isInside(fireButton.getX(),fireButton.getY(),fireButton.getWidth(),fireButton.getHeight())){
+			castFire = false
+		}
+	}
+}
+
+func jumBut as TextureSprite
+{
+	return jumpButton
+}
+
+func fireBut as TextureSprite
+{
+	return fireButton
 }
 
 func getPlayer as Player
 {
 	return player
+}
+
+func getTree as Tree
+{
+	return tree
 }
 
 func cleanup override

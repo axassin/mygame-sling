@@ -1,6 +1,7 @@
 class is SpriteEntity imports cape imports cave imports motion #tree:
 
 var treeX as double
+var player as Player
 var distanceX as double
 var distanceY as double
 var distanceCollideX as double

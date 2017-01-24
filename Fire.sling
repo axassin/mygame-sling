@@ -14,18 +14,17 @@ func createSprite override as Sprite
 	gameScene = getScene() as GameScene
   sceneWidth = layer.getReferenceWidth()
   sceneHeight = layer.getReferenceHeight()
-	var img = scene.createImageFromResource("tree")
+	var img = scene.createImageFromResource("bullet")
 	var texture = scene.createTextureForImage(img)
-	var bird = SpriteUtil.addTextureSpriteForSize(scene, layer, texture, sceneHeight * 0.1, sceneHeight * 0.1)
-	bird.move( sceneWidth , sceneHeight * 0.78 - tree.getHeight())
-	return tree
+	var fire = SpriteUtil.addTextureSpriteForSize(scene, layer, texture, sceneHeight * 0.1, sceneHeight * 0.1)
+	fire.move(gameScene.getPlayer().getX() ,gameScene.getPlayer().getY())
+	return fire
 }
-
 
 func tick(gameTime as TimeValue, delta as double) override
 {
-	var x = sprite.getX() - delta * 0.3
-	sprite.move(x , sceneHeight * 0.78 - sprite.getHeight())
+	var x = sprite.getX() + delta * 0.3
+	sprite.move(x , sprite.getY())
 
 }
 
