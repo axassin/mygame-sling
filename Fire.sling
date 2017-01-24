@@ -47,6 +47,7 @@ func tick(gameTime as TimeValue, delta as double) override
 //		gameScene.removeSprite(gameScene.getBird().getSprite())
 //	}
 	if(collide()){
+			PRINT("DN BALA KO")
 			gameScene.removeSprite(sprite)
 			gameScene.removeSprite(gameScene.getBird().getSprite())
 	}
@@ -54,10 +55,10 @@ func tick(gameTime as TimeValue, delta as double) override
 
 func collide as bool
 {
-	var distanceX = Math.abs(getCenterX() - gameScene.getBird().getCenterX())
-	var distanceY = Math.abs(getCenterY()- gameScene.getBird().getCenterY())
-	var distanceCollideX = sprite.getWidth() * 0.3 + gameScene.getBird().getWidth() * 0.3
-	var distanceCollideY = sprite.getHeight() * 0.3 + gameScene.getBird().getHeight() * 0.3
+	 distanceX = Math.abs(getCenterX() - gameScene.getBird().getCenterX())
+	 distanceY = Math.abs(getCenterY()- gameScene.getBird().getCenterY())
+	 distanceCollideX = sprite.getWidth() * 0.3 + gameScene.getBird().getWidth() * 0.3
+	 distanceCollideY = sprite.getHeight() * 0.3 + gameScene.getBird().getHeight() * 0.3
 	return(distanceX < distanceCollideX && distanceY < distanceCollideY)
 }
 
