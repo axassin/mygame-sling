@@ -1,0 +1,26 @@
+class is SpriteEntity imports cape imports cave imports motion #bullet:
+
+
+var bullet as TextureSprite
+
+
+
+func createSprite override as Sprite
+{
+	var sceneWidth = layer.getReferenceWidth()
+	var sceneHeight = layer.getReferenceHeight()
+	var img = scene.createImageFromResource("bullet")
+	var texture = scene.createTextureForImage(img)
+	bullet = SpriteUtil.addTextureSpriteForSize(scene, layer, texture, sceneHeight * 0.1, sceneHeight * 0.1)
+	bullet.move(sceneWidth * 0.5, sceneHeight * 0.5)
+	return bullet
+}
+
+//func tick(gameTime as TimeValue, delta as double) override
+//{
+//}
+
+func cleanup override
+{
+
+}

@@ -1,0 +1,26 @@
+class is SpriteSceneWithEntities imports cape imports cave imports motion #gameScene:
+
+var player1 as Player
+var tree1 as Tree
+var tree2 as Tree
+
+func initialize override
+{
+	base.initialize()
+	addEntity(player1 = new Player())
+	addEntity(tree1 = new Tree())
+	addEntity(tree2 = new Tree())
+	tree1.move( getReferenceWidth() * 0.5, getReferenceHeight() - tree1.getHeight())
+	tree2.move( 0 , getReferenceHeight() - tree2.getHeight())
+
+}
+
+func tick(gameTime as TimeValue, delta as double) override
+{
+	base.tick(gameTime, delta)
+}
+
+func cleanup override
+{
+
+}

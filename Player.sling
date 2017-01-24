@@ -1,0 +1,95 @@
+class is SpriteEntity is PointerListener imports cape imports cave imports motion #player:
+
+var playerX as double
+var playerY as double
+var gravity as double
+var jumpWidth as double
+var jumpHeight as double
+var jumpForce as double
+var player1 as TextureSprite
+var gameScene as GameScene
+var playerMove as boolean
+
+
+func createSprite override as Sprite
+{
+	//var playerImage = scene.createTextureForImageResource("image1")
+	gameScene = getScene() as GameScene
+	//player1 = gameScene.addTextureSpriteForSize(playerImage , gameScene.getReferenceWidth() * 0.1 , gameScene.getReferenceHeight() * 0.1)
+	//player1.move(gameScene.getReferenceWidth() * 0.5 , gameScene.getReferenceHeight() * 0.5)
+
+
+	gravity = 0.2
+	jumpWidth  = 0
+	jumpHeight = 0.6
+	jumpForce = 0.02
+	playerMove = false
+
+	var sceneWidth = layer.getReferenceWidth()
+	var sceneHeight = layer.getReferenceHeight()
+	var img = scene.createImageFromResource("image1")
+	var texture = scene.createTextureForImage(img)
+	player1 = SpriteUtil.addTextureSpriteForSize(scene, layer, texture, sceneHeight * 0.1, sceneHeight * 0.1)
+	player1.move(sceneWidth * 0.5, sceneHeight - player1.getHeight())
+	playerX = player1.getX()
+	playerY = player1.getY()
+	return player1
+}
+
+func onPointerEvent(event as PointerEvent) as bool
+{
+	if(event.action == PointerEvent.DOWN){
+ 		playerY -= 0.1
+		playerMove = true
+	}
+	else if(event.action == PointerEvent.UP){
+		playerMove = false
+	}
+	return false
+}
+
+func jump()
+{
+	if(jumpWidth < jumpHeight){
+		PRINT(String.append("IF", playerY))
+		jumpWidth += (jumpForce + gravity) * 0.0005
+		playerY -= (jumpForce + gravity) * 0.05
+	}
+	else if(jumpWidth >= jumpHeight){
+			jumpWidth += jumpForce + gravity
+			playerY -= jumpForce + gravity
+			PRINT(String.append("GREATER THAN HEIGHT" , playerY))
+	}
+}
+
+
+func tick(gameTime as TimeValue, delta as double) override
+{
+	base.tick(gameTime, delta)
+
+	if(playerMove){
+		jump()
+		if(jumpWidth > 0){
+			jumpWidth -= jumpForce + gravity
+			playerY += jumpForce + gravity
+			PRINT("After pressing up")
+		}
+		else if(jumpWidth <= 0.6){
+			jumpWidth -= (jumpForce + gravity) * 0.05
+			playerY += (jumpForce + gravity) *0.05
+		}
+	}
+
+	player1.move(playerX , playerY)
+
+}
+
+func ground as bool
+{
+	return (player1.getY() + player1.getHeight() > gameScene.getReferenceHeight())
+}
+
+func cleanup override
+{
+
+}

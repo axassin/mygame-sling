@@ -1,0 +1,17 @@
+title = "This is my program"
+description = "This is a longer description about my program."
+copyright = "Copyright (c) Test Program"
+license = "All rights reserved"
+version = "1.0.x"
+vendorId = "com.myapplication"
+resources = [
+	"images"
+]
+depends = [
+	"cape",
+	"capex"
+]
+preFilters += "@motion"
+compilerOptions = {
+	"html5.readableCode" : "true"
+}
