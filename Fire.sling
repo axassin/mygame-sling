@@ -47,9 +47,8 @@ func tick(gameTime as TimeValue, delta as double) override
 //		gameScene.removeSprite(gameScene.getBird().getSprite())
 //	}
 	if(collide()){
-			PRINT("DN BALA KO")
 			gameScene.removeSprite(sprite)
-			gameScene.removeSprite(gameScene.getBird().getSprite())
+			gameScene.removeEntity(gameScene.getBird())
 	}
 }
 
