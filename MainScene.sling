@@ -8,7 +8,7 @@ var bgSprite as TextureSprite
 func initialize override
 {
 	base.initialize()
-	bgSprite = addTextureSpriteForSize(createTextureForImageResource("background0"), getReferenceWidth(), getReferenceHeight())
+	bgSprite = addTextureSpriteForSize(createTextureForImageResource("mainscene"), getReferenceWidth(), getReferenceHeight())
 	var playButton = createTextureForImageResource("image1")
 	buttonProp = TextButtonEntity.forText("PLAY")
 	buttonProp.	setBackgroundColor(Color.white())
@@ -34,7 +34,5 @@ func switchToGameScene
 
 func cleanup override
 {
-	removeSprite(txtSprite)
-	removeSprite(bgSprite)
-	removeEntity(buttonProp)
+
 }

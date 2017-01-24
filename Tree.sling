@@ -27,9 +27,8 @@ func collide as bool
 {
 	distanceX = Math.abs(getCenterX() - gameScene.getPlayer().getCenterX())
 	distanceY = Math.abs(getCenterY()- gameScene.getPlayer().getCenterY())
-	distanceCollideX = sprite.getWidth() * 0.5 + gameScene.getPlayer().getWidth() * 0.5
-	distanceCollideY = sprite.getHeight() * 0.5 + gameScene.getPlayer().getHeight() * 0.5
-
+	distanceCollideX = sprite.getWidth() * 0.3 + gameScene.getPlayer().getWidth() * 0.3
+	distanceCollideY = sprite.getHeight() * 0.3 + gameScene.getPlayer().getHeight() * 0.3
 	return(distanceX < distanceCollideX && distanceY < distanceCollideY)
 }
 
@@ -39,7 +38,8 @@ func tick(gameTime as TimeValue, delta as double) override
 	var x = sprite.getX() - delta * 0.3
 	sprite.move(x , sceneHeight * 0.78 - sprite.getHeight())
 	if(collide()){
-		switchToGameOverScene()
+		gameScene.switchToGameOverScene()
+		gameScene.removeAllEntities()
 	}
 }
 
@@ -57,9 +57,4 @@ func getCenterY as double
 func cleanup override
 {
 
-}
-
-func switchToGameOverScene
-{
-	gameScene.pushScene(new GameOverScene())
 }

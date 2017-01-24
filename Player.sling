@@ -11,11 +11,16 @@ var playerJump as boolean
 var jumpHeight as double
 var playerFall as boolean
 var oneTap as boolean
+var clip as AudioClip
+var player as TextureSprite
 
 func createSprite override as Sprite
 {
 	gameScene = getScene() as GameScene
-
+	gameScene.audioManager = AudioManager.forApplication(gameScene.context)
+	if(gameScene.audioManager != null){
+		clip = gameScene.audioManager.getClipForResource("jump")
+	}
 	gravity = 0.002
 	jumpForce = 0.005
 	playerJump = false
@@ -23,22 +28,28 @@ func createSprite override as Sprite
 	oneTap = true
 	var sceneWidth = layer.getReferenceWidth()
 	var sceneHeight = layer.getReferenceHeight()
-
 	var img = scene.createImageFromResource("player")
 	var texture = scene.createTextureForImage(img)
-	var player = SpriteUtil.addTextureSpriteForSize(scene, layer, texture, sceneWidth * 0.1, sceneHeight * 0.1)
+  player = SpriteUtil.addTextureSpriteForSize(scene, layer, texture, sceneWidth * 0.1, sceneHeight * 0.1)
 	playerBase = gameScene.getReferenceHeight() * 0.78 - player.getHeight()
 	player.move( player.getWidth(), playerBase)
 	playerX = player.getX()
 	playerY = player.getY()
 	jumpHeight = gameScene.getReferenceHeight() * 0.4
-
 	return player
 }
 
 func onPointerEvent(event as PointerEvent) as bool
 {
-
+	if(event.action == PointerEvent.DOWN){
+		if(event.isInside(gameScene.jumBut().getX(),gameScene.jumBut().getY(),gameScene.jumBut().getWidth(),gameScene.jumBut().getHeight())){
+			if(oneTap){
+				setPlayerJump(true)
+				jumpSoundEffect()
+				playerY -= 0.01
+			}
+		}
+	}
 	return false
 }
 
@@ -51,7 +62,14 @@ func jump(delta as double)
 	}
 	else{
 		playerFall = true
-		playerJump = false
+		setPlayerJump(false)
+	}
+}
+
+func jumpSoundEffect
+{
+	if(clip != null){
+		clip.play()
 	}
 }
 
@@ -70,30 +88,40 @@ func tick(gameTime as TimeValue, delta as double) override
 {
 	base.tick(gameTime, delta)
 	if(playerY >= playerBase){
-		playerJump = false
+		setPlayerJump(false)
 	}
-	if(playerJump){
+	if(getPlayerJump()){
 		jump(delta)
 	}
-	if(playerFall){
+	else if(playerFall){
 		fall(delta)
 	}
 	sprite.move(playerX , playerY)
 }
 
+func setPlayerJump(pJ as boolean)
+{
+	playerJump = pJ
+}
+
+func getPlayerJump as boolean
+{
+	return playerJump
+}
+
+func getSprite as Sprite
+{
+	return sprite
+}
+
 func getCenterX as double
 {
-	return sprite.getX() + (sprite.getWidth() * 0.5)
+	return sprite.getX() + sprite.getWidth() * 0.5
 }
 
 func getCenterY as double
 {
-	return sprite.getY() + (sprite.getHeight() * 0.5)
-}
-
-func getOneTap as bool
-{
-	return oneTap
+	return sprite.getY() + sprite.getHeight() * 0.5
 }
 
 func cleanup override

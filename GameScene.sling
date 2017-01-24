@@ -10,11 +10,19 @@ var jumpButton as TextureSprite
 var jumpIsClicked as boolean
 var castFire as boolean
 var fireBullet as Fire
+var bird as Bird
+var audioManager as AudioManager
+var stream as AudioStream
 
 func initialize override
 {
 
 	base.initialize()
+	audioManager = AudioManager.forApplication(context)
+	if(audioManager != null){
+		stream = audioManager.getStreamForResource("background")
+	}
+	playBackgroundMusic()
 	jumpIsClicked = false
 	addEntity(gameBackground = new GameBackground())
 	var fireButtonTexture = createTextureForImageResource("fire_button")
@@ -23,6 +31,7 @@ func initialize override
   jumpButton = addTextureSpriteForSize(jumpButtonTexture, getReferenceWidth() * 0.1, getReferenceHeight() * 0.1)
 	fireButton.move(0 , getReferenceHeight() - fireButton.getHeight())
 	jumpButton.move(getReferenceWidth() - jumpButton.getWidth() , getReferenceHeight() - jumpButton.getHeight())
+	addEntity(bird = new Bird())
 	addEntity(player = new Player())
 }
 
@@ -32,12 +41,21 @@ func tick(gameTime as TimeValue, delta as double) override
 	time += 1
 	if(time % 200 == 0){
 		addEntity(tree = new Tree())
+		addEntity(bird = new Bird())
 	}
 	if(castFire){
 		addEntity(fireBullet = new Fire())
 	}
 
 	PRINT(String.append("TIME: " , gameTime.getMicroSeconds() / 1000000))
+}
+
+func playBackgroundMusic
+{
+	if(stream != null){
+		stream.play()
+		stream.setLooping(true)
+	}
 }
 
 func onPointerEvent(event as PointerEvent) override
@@ -50,16 +68,6 @@ func onPointerEvent(event as PointerEvent) override
 		if(event.isInside(fireButton.getX(),fireButton.getY(),fireButton.getWidth(),fireButton.getHeight())){
 			castFire = true
 		}
-
-		if(event.action == PointerEvent.DOWN){
-			if(event.isInside(jumpButton.getX(),jumpButton.getY(),jumpButton.getWidth(),jumpButton.getHeight())){
-				if(player.getOneTap()){
-					player.getY() -= 0.001
-					player.setPlayerJump(true)
-				}
-			}
-		}
-
 	}
 	else if(event.action == PointerEvent.UP){
 		if(event.isInside(fireButton.getX(),fireButton.getY(),fireButton.getWidth(),fireButton.getHeight())){
@@ -73,20 +81,42 @@ func jumBut as TextureSprite
 	return jumpButton
 }
 
-func fireBut as TextureSprite
-{
-	return fireButton
-}
 
 func getPlayer as Player
 {
 	return player
 }
 
+func getBird as Bird
+{
+	return bird
+}
+
+func getFire as Fire
+{
+	return fireBullet
+}
+
 func getTree as Tree
 {
 	return tree
 }
+
+//func collide(target1 as Sprite , target2 as Sprite) as bool
+//{
+//	var distanceX = Math.abs((target1.getX() + (target1.getWidth() * 0.5)) - (target2.getX() + (target2.getWidth() * 0.5)))
+//	var distanceY = Math.abs((target1.getY() + (target1.getHeight() * 0.5)) - (target2.getY() + (target2.getHeight() * 0.5)))
+//	var distanceCollideX = target1.getWidth() * 0.4 + target2.getWidth() * 0.4
+//	var distanceCollideY = target1.getHeight() * 0.4 + target2.getHeight() * 0.4
+//	return(distanceX < distanceCollideX && distanceY < distanceCollideY)
+//}
+
+func switchToGameOverScene
+{
+	stream.stop()
+	pushScene(new GameOverScene())
+}
+
 
 func cleanup override
 {

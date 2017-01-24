@@ -7,27 +7,23 @@ var distanceCollideY as double
 var gameScene as GameScene
 var sceneWidth as double
 var sceneHeight as double
-
+var birdX as double
+var birdY as double
+var bird as TextureSprite
 
 func createSprite override as Sprite
 {
+
 	gameScene = getScene() as GameScene
   sceneWidth = layer.getReferenceWidth()
   sceneHeight = layer.getReferenceHeight()
-	var img = scene.createImageFromResource("tree")
+	var img = scene.createImageFromResource("bird")
 	var texture = scene.createTextureForImage(img)
-	var bird = SpriteUtil.addTextureSpriteForSize(scene, layer, texture, sceneHeight * 0.1, sceneHeight * 0.1)
-	bird.move( sceneWidth , sceneHeight * 0.78 - bird.getHeight())
+  bird = SpriteUtil.addTextureSpriteForSize(scene, layer, texture, sceneHeight * 0.05, sceneHeight * 0.05)
+	birdX = sceneWidth - bird.getWidth()
+	birdY = sceneHeight * 0.5
+	bird.move(birdX, birdY)
 	return bird
-	
-}
-
-
-func tick(gameTime as TimeValue, delta as double) override
-{
-	var x = sprite.getX() - delta * 0.3
-	sprite.move(x , sceneHeight * 0.78 - sprite.getHeight())
-
 }
 
 func getCenterX as double
@@ -40,13 +36,35 @@ func getCenterY as double
 	return sprite.getY() + sprite.getHeight() * 0.5
 }
 
+func tick(gameTime as TimeValue, delta as double) override
+{
+	base.tick(gameTime, delta)
+	birdY -= (sprite.getY() - (gameScene.getPlayer().getY() - 0.005 * sprite.getHeight())) * 0.01
+	birdX -= (sprite.getX() - (gameScene.getPlayer().getX() - 0.005 * sprite.getWidth())) * 0.01
+//if(gameScene.collide(sprite, gameScene.getPlayer().getSprite())){
+//	gameScene.switchToGameOverScene()
+// }
+	if(collide()){
+		gameScene.switchToGameOverScene()
+	}
+	sprite.move(birdX , birdY)
+}
+
+func collide as bool
+{
+	var distanceX = Math.abs(getCenterX() - gameScene.getPlayer().getCenterX())
+	var distanceY = Math.abs(getCenterY()- gameScene.getPlayer().getCenterY())
+	var distanceCollideX = sprite.getWidth() * 0.3 + gameScene.getPlayer().getWidth() * 0.3
+	var distanceCollideY = sprite.getHeight() * 0.3 + gameScene.getPlayer().getHeight() * 0.3
+	return(distanceX < distanceCollideX && distanceY < distanceCollideY)
+}
 
 func cleanup override
 {
-
+	gameScene.removeSprite(sprite)
 }
 
-func switchToGameOverScene
+func getSprite as Sprite
 {
-	gameScene.pushScene(new GameOverScene())
+	return sprite
 }

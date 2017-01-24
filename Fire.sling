@@ -7,25 +7,24 @@ var distanceCollideY as double
 var gameScene as GameScene
 var sceneWidth as double
 var sceneHeight as double
+var clip as AudioClip
 
 
 func createSprite override as Sprite
 {
 	gameScene = getScene() as GameScene
+	gameScene.audioManager = AudioManager.forApplication(gameScene.context)
+	if(gameScene.audioManager != null){
+		clip = gameScene.audioManager.getClipForResource("shoot")
+	}
+	shootSoundEffect()
   sceneWidth = layer.getReferenceWidth()
   sceneHeight = layer.getReferenceHeight()
 	var img = scene.createImageFromResource("bullet")
 	var texture = scene.createTextureForImage(img)
 	var fire = SpriteUtil.addTextureSpriteForSize(scene, layer, texture, sceneHeight * 0.1, sceneHeight * 0.1)
-	fire.move(gameScene.getPlayer().getX() ,gameScene.getPlayer().getY())
+	fire.move(gameScene.getPlayer().getX() + gameScene.getPlayer().getWidth()  ,gameScene.getPlayer().getY() - gameScene.getPlayer().getHeight() * 0.25 )
 	return fire
-}
-
-func tick(gameTime as TimeValue, delta as double) override
-{
-	var x = sprite.getX() + delta * 0.3
-	sprite.move(x , sprite.getY())
-
 }
 
 func getCenterX as double
@@ -38,13 +37,43 @@ func getCenterY as double
 	return sprite.getY() + sprite.getHeight() * 0.5
 }
 
+func tick(gameTime as TimeValue, delta as double) override
+{
+	base.tick(gameTime, delta)
+	var x = sprite.getX() + delta * 0.3
+	sprite.move(x , sprite.getY())
+//	if(gameScene.collide(sprite, gameScene.getBird().getSprite())){
+//		gameScene.removeSprite(sprite)
+//		gameScene.removeSprite(gameScene.getBird().getSprite())
+//	}
+	if(collide){
+			gameScene.removeSprite(sprite)
+			gameScene.removeSprite(gameScene.getBird().getSprite())
+	}
+}
+
+func collide as bool
+{
+	var distanceX = Math.abs(getCenterX() - gameScene.getBird().getCenterX())
+	var distanceY = Math.abs(getCenterY()- gameScene.getBird().getCenterY())
+	var distanceCollideX = sprite.getWidth() * 0.3 + gameScene.getBird().getWidth() * 0.3
+	var distanceCollideY = sprite.getHeight() * 0.3 + gameScene.getBird().getHeight() * 0.3
+	return(distanceX < distanceCollideX && distanceY < distanceCollideY)
+}
 
 func cleanup override
 {
 
 }
 
-func switchToGameOverScene
+func getSprite as Sprite
 {
-	gameScene.pushScene(new GameOverScene())
+	return sprite
+}
+
+func shootSoundEffect
+{
+	if(clip != null){
+		clip.play()
+	}
 }
