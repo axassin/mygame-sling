@@ -1,18 +1,17 @@
 class is SpriteSceneWithEntities imports cape imports cave imports motion #gameScene:
 
-var player1 as Player
+var player as Player
 var tree as Tree
 var time as int
 var gameBackground as GameBackground
+var gameTimer as long
 
 func initialize override
 {
+
 	base.initialize()
 	addEntity(gameBackground = new GameBackground())
-	addEntity(player1 = new Player())
-
-
-
+	addEntity(player = new Player())
 }
 
 func tick(gameTime as TimeValue, delta as double) override
@@ -20,8 +19,14 @@ func tick(gameTime as TimeValue, delta as double) override
 	base.tick(gameTime, delta)
 	time += 1
 	if(time % 200 == 0){
-	addEntity(tree = new Tree())
+		addEntity(tree = new Tree())
 	}
+	PRINT(String.append("TIME: " , gameTime.getMicroSeconds() / 1000000))
+}
+
+func getPlayer as Player
+{
+	return player
 }
 
 func cleanup override

@@ -1,6 +1,5 @@
-class is SpriteEntity imports cape imports cave imports motion #tree:
+class is SpriteEntity imports cape imports cave imports motion #fire:
 
-var treeX as double
 var distanceX as double
 var distanceY as double
 var distanceCollideX as double
@@ -17,19 +16,9 @@ func createSprite override as Sprite
   sceneHeight = layer.getReferenceHeight()
 	var img = scene.createImageFromResource("tree")
 	var texture = scene.createTextureForImage(img)
-	var tree = SpriteUtil.addTextureSpriteForSize(scene, layer, texture, sceneHeight * 0.1, sceneHeight * 0.1)
-	tree.move( sceneWidth , sceneHeight * 0.78 - tree.getHeight())
+	var bird = SpriteUtil.addTextureSpriteForSize(scene, layer, texture, sceneHeight * 0.1, sceneHeight * 0.1)
+	bird.move( sceneWidth , sceneHeight * 0.78 - tree.getHeight())
 	return tree
-}
-
-func collide as bool
-{
-	distanceX = Math.abs(getCenterX() - gameScene.getPlayer().getCenterX())
-	distanceY = Math.abs(getCenterY()- gameScene.getPlayer().getCenterY())
-	distanceCollideX = sprite.getWidth() * 0.5 + gameScene.getPlayer().getWidth() * 0.5
-	distanceCollideY = sprite.getHeight() * 0.5 + gameScene.getPlayer().getHeight() * 0.5
-
-	return(distanceX < distanceCollideX && distanceY < distanceCollideY)
 }
 
 
@@ -37,9 +26,7 @@ func tick(gameTime as TimeValue, delta as double) override
 {
 	var x = sprite.getX() - delta * 0.3
 	sprite.move(x , sceneHeight * 0.78 - sprite.getHeight())
-	if(collide()){
-		switchToGameOverScene()
-	}
+
 }
 
 func getCenterX as double

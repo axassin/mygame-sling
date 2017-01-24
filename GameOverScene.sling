@@ -1,0 +1,33 @@
+class is SpriteSceneWithEntities imports cape imports cave imports motion #GameOverScene:
+
+var bgTexture as TextureSprite
+
+func initialize override
+{
+	base.initialize()
+	bgTexture = addTextureSpriteForSize(createTextureForImageResource("gameover"), getReferenceWidth(), getReferenceHeight())
+	var buttonProp = TextButtonEntity.forText("PLAY AGAIN")
+	buttonProp.	setBackgroundColor(Color.forRGB(0,255,0))
+	addEntity(buttonProp)
+	buttonProp.move((getReferenceWidth() * 0.5) - buttonProp.getWidth() * 0.5 , (getReferenceHeight() * 0.5) - buttonProp.getHeight())
+	buttonProp.setClickHandler(func {
+		switchToGameScene()
+	})
+
+}
+
+func onPointerEvent(event as PointerEvent) override
+{
+	base.onPointerEvent(event)
+	if(event.isConsumed){
+		return
+	}
+	if(event.action == PointerEvent.DOWN){
+		PRINT("Back")
+	}
+}
+
+func switchToGameScene()
+{
+	pushScene(new GameScene())
+}
